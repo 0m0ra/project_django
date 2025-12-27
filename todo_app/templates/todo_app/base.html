@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}To-Do List - Список задач{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 To-Do List</h1>
+            <p class="subtitle">Организуйте свои задачи и ничего не забывайте</p>
+            {% if user.is_authenticated %}
+                <div class="user-info">
+                    <span>Привет, {{ user.username }}!</span>
+                    <a href="{% url 'todo_app:logout' %}" class="logout-btn">Выйти</a>
+                </div>
+            {% else %}
+                <div class="user-info">
+                    <a href="{% url 'todo_app:login' %}" class="login-btn">Войти</a>
+                    <a href="{% url 'todo_app:register' %}" class="register-btn">Регистрация</a>
+                </div>
+            {% endif %}
+        </header>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <nav class="main-nav">
+            <a href="{% url 'todo_app:task_list' %}" class="nav-link">📋 Список задач</a>
+            <a href="{% url 'todo_app:calendar' %}" class="nav-link">📅 Календарь</a>
+            <a href="{% url 'todo_app:contact' %}" class="nav-link">📞 Контакты</a>
+        </nav>
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer>
+            <p>&copy; 2025 To-Do List App. Сделано с Django.</p>
+        </footer>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
+

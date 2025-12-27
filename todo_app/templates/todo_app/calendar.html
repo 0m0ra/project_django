@@ -1,0 +1,62 @@
+{% extends 'todo_app/base.html' %}
+{% load static %}
+
+{% block title %}Календарь - To-Do List{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="calendar-header">
+        <a href="{% url 'todo_app:calendar' %}?year={{ prev_year }}&month={{ prev_month }}" class="calendar-nav-btn">← Предыдущий</a>
+        <h2>{{ month_name_ru }} {{ year }}</h2>
+        <a href="{% url 'todo_app:calendar' %}?year={{ next_year }}&month={{ next_month }}" class="calendar-nav-btn">Следующий →</a>
+    </div>
+
+    <div class="calendar-grid">
+        <!-- Дни недели -->
+        <div class="calendar-weekdays">
+            <div class="calendar-weekday">Пн</div>
+            <div class="calendar-weekday">Вт</div>
+            <div class="calendar-weekday">Ср</div>
+            <div class="calendar-weekday">Чт</div>
+            <div class="calendar-weekday">Пт</div>
+            <div class="calendar-weekday">Сб</div>
+            <div class="calendar-weekday">Вс</div>
+        </div>
+
+        <!-- Календарная сетка -->
+        <div class="calendar-days">
+            {% for day_info in calendar_days %}
+                {% if day_info.day %}
+                    <div class="calendar-day {% if day_info.is_today %}today{% endif %} {% if day_info.is_past %}past{% endif %}" data-date="{{ day_info.date_key }}">
+                        <div class="calendar-day-number">{{ day_info.day }}</div>
+                        <div class="calendar-day-tasks">
+                            {% for task in day_info.tasks %}
+                                <div class="calendar-task {% if task.completed %}completed{% endif %} {% if day_info.is_past and not task.completed %}overdue{% endif %}" title="{{ task.title }}">
+                                    <span class="calendar-task-title">{{ task.title|truncatewords:3 }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="calendar-day empty"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="calendar-legend">
+        <div class="legend-item">
+            <span class="legend-color today"></span>
+            <span>Сегодня</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-color overdue"></span>
+            <span>Просрочено</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-color completed"></span>
+            <span>Выполнено</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

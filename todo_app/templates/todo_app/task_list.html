@@ -1,0 +1,129 @@
+{% extends 'todo_app/base.html' %}
+
+{% block content %}
+<div class="todo-container">
+    <!-- Форма добавления задачи -->
+    <div class="add-task-section">
+        <form method="post" action="{% url 'todo_app:task_create' %}" id="task-form" class="task-form">
+            {% csrf_token %}
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="title" 
+                    class="task-input" 
+                    placeholder="Введите новую задачу..." 
+                    required
+                    autofocus
+                >
+                <input 
+                    type="date" 
+                    name="due_date" 
+                    class="task-date-input" 
+                    title="Срок выполнения (необязательно)"
+                >
+                <button type="submit" class="add-btn" title="Добавить задачу">
+                    <span class="plus-icon">+</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats">
+        <div class="stat-item">
+            <span class="stat-label">Всего задач:</span>
+            <span class="stat-value">{{ total_tasks }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Выполнено:</span>
+            <span class="stat-value completed-stat">{{ completed_count }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Активных:</span>
+            <span class="stat-value active-stat">{{ active_tasks.count }}</span>
+        </div>
+    </div>
+
+    <!-- Список активных задач -->
+    {% if active_tasks %}
+    <div class="tasks-section">
+        <h2 class="section-title">Активные задачи</h2>
+        <ul class="task-list" id="active-tasks">
+            {% for task in active_tasks %}
+            <li class="task-item" data-task-id="{{ task.id }}">
+                <label class="task-checkbox">
+                    <input 
+                        type="checkbox" 
+                        class="task-checkbox-input" 
+                        data-task-id="{{ task.id }}"
+                        {% if task.completed %}checked{% endif %}
+                    >
+                    <span class="checkmark"></span>
+                </label>
+                <span class="task-title">{{ task.title }}</span>
+                {% if task.due_date %}
+                    <span class="task-date {% if task.due_date < today %}overdue{% elif task.due_date == today %}today{% endif %}">
+                        📅 {{ task.due_date|date:"d.m.Y" }}
+                    </span>
+                {% endif %}
+                <button 
+                    class="delete-btn" 
+                    data-task-id="{{ task.id }}"
+                    title="Удалить задачу"
+                    aria-label="Удалить задачу"
+                >
+                    🗑
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Список выполненных задач -->
+    {% if completed_tasks %}
+    <div class="tasks-section completed-section">
+        <h2 class="section-title">Выполненные задачи</h2>
+        <ul class="task-list completed-list" id="completed-tasks">
+            {% for task in completed_tasks %}
+            <li class="task-item completed" data-task-id="{{ task.id }}">
+                <label class="task-checkbox">
+                    <input 
+                        type="checkbox" 
+                        class="task-checkbox-input" 
+                        data-task-id="{{ task.id }}"
+                        checked
+                    >
+                    <span class="checkmark"></span>
+                </label>
+                <span class="task-title">{{ task.title }}</span>
+                {% if task.due_date %}
+                    <span class="task-date {% if task.due_date < today %}overdue{% elif task.due_date == today %}today{% endif %}">
+                        📅 {{ task.due_date|date:"d.m.Y" }}
+                    </span>
+                {% endif %}
+                <button 
+                    class="delete-btn" 
+                    data-task-id="{{ task.id }}"
+                    title="Удалить задачу"
+                    aria-label="Удалить задачу"
+                >
+                    🗑
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Пустое состояние -->
+    {% if not active_tasks and not completed_tasks %}
+    <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h3>Нет задач</h3>
+        <p>Добавьте свою первую задачу выше!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

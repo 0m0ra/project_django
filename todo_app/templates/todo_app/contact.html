@@ -1,0 +1,76 @@
+{% extends 'todo_app/base.html' %}
+
+{% block title %}Контакты - To-Do List{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+    <div class="contact-info-section">
+        <h2>📞 Контактная информация</h2>
+        <div class="contact-details">
+            <div class="contact-item">
+                <div class="contact-icon">👤</div>
+                <div class="contact-content">
+                    <strong>ФИО:</strong>
+                    <span>{{ contact_info.name }}</span>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">📱</div>
+                <div class="contact-content">
+                    <strong>Телефон:</strong>
+                    <a href="tel:{{ contact_info.phone }}">{{ contact_info.phone }}</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">✉️</div>
+                <div class="contact-content">
+                    <strong>Email:</strong>
+                    <a href="mailto:{{ contact_info.email }}">{{ contact_info.email }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-form-section">
+        <h2>💬 Написать сообщение</h2>
+        <p class="form-description">Заполните форму ниже, и мы свяжемся с вами в ближайшее время.</p>
+        
+        <form method="post" class="contact-form">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="field-errors">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="field-errors">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                    <div class="field-errors">{{ form.message.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="contact-submit-btn">Отправить сообщение</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
