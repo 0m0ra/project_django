@@ -265,13 +265,6 @@ def task_list(request):
     """
 ```
 
-## Дополнительная документация
-
-- [AUTHENTICATION.md](AUTHENTICATION.md) - Документация по системе аутентификации
-- [CALENDAR_FEATURE.md](CALENDAR_FEATURE.md) - Документация по функции календаря
-- [CONTACT_FEATURE.md](CONTACT_FEATURE.md) - Документация по разделу обратной связи
-- [VALIDATION.md](VALIDATION.md) - Документация по валидации данных
-- [QUICKSTART.md](QUICKSTART.md) - Быстрый старт проекта
 
 ## Контактная информация
 
